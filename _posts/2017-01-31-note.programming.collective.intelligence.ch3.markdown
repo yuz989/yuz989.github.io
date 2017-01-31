@@ -1,0 +1,67 @@
+---
+layout: post
+title:  "[Note] Programming Collective Intelligence: Ch3 Discovering Groups"
+date:   2017-01-31 22:05:30 +0800
+categories: Notes - Programming Collective Intelligence
+---
+
+### Model
+
+本文介紹如何對 blog 的內容做群集分析(clustering analysis) ，使得相似的內容被歸類到同一個 cluster。 至於要如何描述文章的相似性呢？一個簡單的做法是使用 bag of words 模型。把文章映射到一個高維度的向量空間，每一個維度代表一個單詞，再根據單詞的出現次數決定維度的大小（或者是 one-hot vector 的形式，不考慮出現次數，僅以 1 或 0 表示單詞是否出現)，例如:
+
+
+	"i think therefore i am" 
+
+	可以轉換成一個向量 <2, 1, 1, 1>。第一個維度是 i, 座標=2。 第二個維度是 think, 座標=1，以此類推...)
+
+可以看出此種轉換忽略了語序的問題，無法對語義(semantic)做分析。再看下面的例子:
+
+	"obama and i do think trump is not a good president" 
+
+	"trump and i do not think obama is a good president"
+
+假設向量空間定義為 <i, and, not, a, good, is, do, think, president, trump, obama>。上述兩句話轉換出來的向量皆為 <1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1>。但是我們可看出兩句話的語義是不太一樣的。
+
+另外還有一個問題: 向量空間的維度要如何決定呢? 一本英文字典的單詞大約在20萬字以內，若以此作為空間的維度，轉換後的 Blog 向量會是一個 sparse vector
+
+
+### Similarity Measurement 
+	
+得到了資料的 representation，接下來可定義衡量相似性的指摽
+
+	1. Eculedian distance / Cosine similarity / City block distance: 
+
+	以幾何度量來看待問題
+
+	3. Jaccard index: 以集合的角度來衡量
+
+	5. Pearson Correlation
+	
+	6. Kullback–Leibler divergence: 把 blog 視為單詞的機率分佈 probability distribution 來衡量
+
+### Clustering
+
+	1. k-means
+	
+	2. adaptive clustering	
+
+### Discussion
+
+本文對群集分析 (cluster analysis) 做了粗略的介紹，在此提出一些值得分析的問題作為討論:
+
+	1. 書中採用 full-batch clustering 的做法，若語料庫 (corpus) 的文本過於龐大將使得 full-batch 非常沒效率，實務上一般採用 mini-batch
+	
+	2. 分群需事先知道群組類別的數量(k)，修改群組的數量後得重新再分類一次，在不同的應用情境底下有可能做到嗎? 例如 news aggregator 的情境，可能有辦法事先決定k (依照新聞種類: 政治/體育/財金/娛樂...)
+
+	3. k-means 分群的結果會受到初始化中選擇不同的 k 個 representative 而有所不同，如何選擇 representative 以達到快速收斂?
+
+	4. 承 3. 如何證明 k-means 一定會收斂? (hint: 考慮所有可能的分群結果)
+
+### References
+
+[1] Bag-of-words model Wiki: <a href="https://en.wikipedia.org/wiki/Bag-of-words_model">https://en.wikipedia.org/wiki/Bag-of-words_model</a>
+
+{% highlight python %}
+{% endhighlight %}
+
+
